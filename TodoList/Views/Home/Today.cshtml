@@ -1,0 +1,131 @@
+﻿
+@{
+    ViewBag.Title = "Today";
+    Layout = "~/Views/Shared/_LayoutPage1.cshtml";
+}
+
+<div class="row">
+    <div class="col-8 flex-grow-1 flex-shrink-1">
+        <div class="d-flex align-items-center mb-4">
+            <span class="text-dark fw-bolder" style="font-size: 36px;">Today</span>
+            <span class="ms-3 rounded text-dark" style="padding: 6px; font-size: 30px; border: 1px solid #ebebeb;">12</span>
+        </div>
+
+        <div id="task__today" class="mx-2 p-3 rounded" style="border: 1px solid #ebebeb;">
+
+            <div class="row mt-2 mb-3">
+                <div class="col-12">
+                    <form method="get" action="/Task/Add">
+                        <div class="py-2 px-3 me-5 rounded d-flex align-items-center" style="background-color: transparent; border: 1px solid #ebebeb; font-size: 14px;">
+                            <i class="fas fa-plus text-muted fw-bolder me-2"></i>
+                            <input type="hidden" name="Upcoming" value="Home" />
+                            <input type="text" name="TaskName" class="border-0 w-100" placeholder="Add New Task" style="outline: none; background-color: transparent; font-size: 14px;" required>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            @if (Model != null)
+            {
+                foreach(var item in Model)
+                {
+                    <div class="row">
+                        <div class="col-12">
+                            <div data-id="@item.TaskID" data-title="@item.TaskTitle" data-description="@item.TaskDescription" data-listid="@item.ListID" data-image="@item.TaskImage" data-duedate="@item.DueDate" data-is-home="yes" class="task__item px-3 d-flex justify-content-between me-5" style="cursor: pointer;">
+                                <div class="">
+                                    <input type="checkbox" class="task__item--ck me-2">
+                                    <span class="task__item--title">@item.TaskTitle</span>
+                                </div>
+                                <div class="text-end"><i class="fas fa-angle-right"></i></div>
+                            </div>
+
+                            <hr class="my-3 me-5" style="background-color: #b1b1b1;">
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+
+    <div class="col-4" id="task__options">
+        <form method="post" action="/Task/Edit" enctype="multipart/form-data">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="TaskID" id="TaskID" value="" />
+            <input type="hidden" name="TaskImage" id="task__image--update" value="" />
+            <input type="hidden" name="isHome" id="task__image--update" value="yes" />
+
+            <div class="d-flex flex-column justify-content-between py-3 px-4" style="height: calc(100vh - 2rem); opacity: 1; background-color: #f4f4f4; border-radius: 16px; box-shadow: rgba(0, 0, 0, 0.08) 0px 0px 0px; border: 0px;">
+                <div style="height: calc(100vh - 46px - 4rem); overflow-y: scroll; overflow-x: hidden;">
+                    <div class="d-flex justify-content-between flex-grow-1 flex-shrink-1 fw-bold">
+                        <div class="fs-5" style="color:#555;">Task:</div>
+                        <div id="task__options--close" class="fs-6 px-2" style="cursor: pointer;"><i class="fas fa-times fw-bold"></i></div>
+                    </div>
+
+                    <div class="my-3">
+                        <input class="form-control text-muted" style="background-color: transparent; border: 1px solid #ebebeb;" type="text" name="TaskTitle" id="TaskTitle" value="My title">
+                    </div>
+
+                    <div class="mb-3">
+                        <textarea class="form-control text-muted" style="background-color: transparent; border: 1px solid #ebebeb;" name="TaskDescription" id="TaskDescription" rows="3">Description</textarea>
+                    </div>
+
+                    @if (Session["Lists"] != null)
+                    {
+
+                        <div class="row mb-3">
+                            <label for="" class="col-4">List</label>
+                            <select name="ListID" id="ListID" class="col-8 w-auto" style="background-color: transparent; border: 1px solid #ebebeb;" value="">
+                                @foreach (var item in (dynamic)Session["Lists"])
+                                {
+                                    <option value="@item.ListID">@item.ListName</option>
+                                }
+                            </select>
+                        </div>
+                    }
+
+                    <div class="row mb-3">
+                        <label for="" class="col-4">Due date</label>
+                        <input class="col-8 w-auto" style="background-color: transparent; border: 1px solid #ebebeb;" type="date" name="DueDate" id="DueDate" value="2023-12-04">
+                    </div>
+
+                    <div class="row mb-3">
+                        <label for="" class="col-6">Add Image</label>
+                        <input class="col-6 form-control" style="background-color: transparent; border: 1px solid #ebebeb;" type="file" name="img">
+                    </div>
+
+                    <div class="row mb-3" id="TaskImage"></div>
+
+                    <div id="fullpage" onclick="this.style.display='none';"></div>
+                    @*<div class="fs-5 mb-2" style="color:#555;">Subtasks:</div>
+                <div class="">
+                    <div class="py-2 px-3 mb-3 rounded d-flex align-items-center" style="background-color: transparent; border: 1px solid #ebebeb; font-size: 14px;">
+                        <i class="fas fa-plus text-muted fw-bolder me-2"></i>
+                        <input type="hidden" name="action" value="AddSubTask" />
+                        <input type="hidden" name="TaskID" value="" />
+                        <input type="text" name="StName" class="border-0 w-100" placeholder="Add New Sub Task" style="outline: none; background-color: transparent; font-size: 14px;">
+                    </div>
+
+                    <div class="px-3 d-flex justify-content-between align-items-center">
+                        <div class="subtask__item">
+                            <input type="checkbox" class="subtask__item--ck me-2" name="" id="">
+                            <span class="subtask__item--title">Subtask</span>
+                        </div>
+                        <div class="text-end"><a onclick="return confirm('Are you sure delete this task?');" href="/Task/DeleteSubTask?id=20" class="text-decoration-none"><i class="fas fa-times fw-bold"></i></a></div>
+                    </div>
+
+                    <hr class="my-2" style="background-color: #b1b1b1;">
+                </div>*@
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <a onclick="return confirm('Are you sure delete this task?');" role="button" href="" class="btn btn-danger w-100" id="TaskDelBtn" style="border: 2px solid #ebebeb;">Delete Task</a>
+                    </div>
+                    <div class="col-md-6">
+                        <button type="submit" class="btn btn-default w-100" style="background-color: #54b5d5; padding: 6px;">Save Changes</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

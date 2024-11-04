@@ -1,0 +1,186 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <link rel="icon" href="~/Images/logo.png" type="image/x-icon" />
+    <link rel="stylesheet" href="~/Content/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/Content/all.min.css" />
+    <link rel="stylesheet" href="~/css/style.css" />
+</head>
+<body>
+    <div class="d-flex p-3">
+        <nav class="navbar__menu--show my-3" style="margin-right: 5%;" id="navbar__menu--show">
+            <button class="btn btn-default pt-0" type="button" style="box-shadow: none; border: 0;">
+                <i class="fas fa-bars"></i>
+            </button>
+        </nav>
+
+        <div id="l-navbar" class="show d-flex flex-column justify-content-between px-3 py-3" style="height: calc(100vh - 2rem); min-width: 250px; background-color: #f4f4f4; border-radius: 16px;">
+            <div>
+                <div class="row">
+                    <div class="col-12 d-flex justify-content-between align-items-center">
+                        <div class="fw-bold fs-5" style="color: #333;">Menu</div>
+                        <div class="">
+                            <button id="navbar__menu--close" class="btn btn-default navbar__menu--close text-muted" type="button" style="box-shadow: none; padding: 0; border: 0;">
+                                <i class="fas fa-bars"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                @*<div class="row my-2">
+                    <form method="post">
+                        <div class="p-1 px-2 rounded" style="background-color: transparent; border: 1px solid #ebebeb; font-size: 14px;">
+                            <i class="fas fa-magnifying-glass text-muted fw-bolder"></i>
+                            <input type="text" class="border-0" placeholder="Search" style="outline: none; background-color: transparent; font-size: 14px;">
+                        </div>
+                    </form>
+                </div>*@
+
+                <div class="row mt-3 mb-2">
+                    <span class="fw-bolder" style="font-size: 12px; color: #333;">TASKS</span>
+                </div>
+
+                <div class="row">
+                    <div class="col-12 ms-2">
+                        <div class="pe-1 mb-1 rounded l-navbar__item @(ViewContext.RouteData.Values["Action"].ToString() == "Upcoming" ? "active" : "")">
+                            <a class="nav-link text-muted py-1 px-2 d-flex justify-content-between align-items-center" href="@Url.Action("Upcoming", "Home")">
+                                <div>
+                                    <i class="fas fa-angles-right me-2"></i>
+                                    <span class="task__heading">Upcoming</span>
+                                </div>
+                                @if (Session["UpcomingQty"] != null)
+                                {
+                                    <span class="px-2 rounded text-muted task__qty" style="background-color: #ebebeb; font-size: 12px;">
+                                        @Session["UpcomingQty"]
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="px-2 rounded text-muted task__qty" style="background-color: #ebebeb; font-size: 12px;">0</span>
+                                }
+                            </a>
+                        </div>
+
+                        <div class="pe-1 mb-1 rounded l-navbar__item @(ViewContext.RouteData.Values["Action"].ToString() == "Today" ? "active" : "")">
+                            <a class="nav-link text-muted py-1 px-2 d-flex justify-content-between align-items-center" href="@Url.Action("Today", "Home")">
+                                <div class="">
+                                    <i class="fas fa-list-check me-2"></i>
+                                    <span class="task__heading">Today</span>
+                                </div>
+                                @if (Session["TodayQty"] != null)
+                                { 
+                                    <span class="px-2 rounded text-muted task__qty" style="background-color: #ebebeb; font-size: 12px;">
+                                        @Session["TodayQty"]
+                                    </span>
+                                }
+                                else {
+                                    <span class="px-2 rounded text-muted task__qty" style="background-color: #ebebeb; font-size: 12px;">0</span>
+                                }
+                            </a>
+                        </div>
+
+                        <div class="pe-1 mb-1 rounded l-navbar__item @(ViewContext.RouteData.Values["Action"].ToString() == "StickyWall"? "active" : "")">
+                            <a class="nav-link text-muted py-1 px-2 d-flex justify-content-between align-items-center" href="@Url.Action("StickyWall", "Home")">
+                                <div class="">
+                                    <i class="fa-regular fa-note-sticky me-2"></i>
+                                    <span class="task__heading">Sticky Wall</span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <hr style="background-color: #b1b1b1;">
+
+                <div class="row mt-3 mb-2">
+                    <span class="fw-bolder" style="font-size: 12px; color: #333;">LISTS</span>
+                </div>
+
+                <div class="row">
+                    <div class="col-12 ms-2">
+                        <div class="pe-1 mb-1 rounded">
+                            @if (Session["Lists"] != null) {
+                                foreach (var list in (dynamic)Session["Lists"])
+                                {
+                                <a href="@Url.Action("Index", "List", new {ListID = list.ListID})" class="nav-link d-flex justify-content-between align-items-center l-navbar__item @(ViewBag.ListID == list.ListID? "active" : "")">
+                                    <div class="text-muted py-1 px-2">
+                                        <div class="d-flex align-items-center">
+                                            <div class="rounded me-3" style="width: 15px; height: 15px; background-color: @list.BgColor;"></div>
+                                            <span class="list__heading text-dark">@list.ListName</span>
+                                        </div>
+                                    </div>
+                                    @*<span class="px-2 rounded text-muted list__qty" style="background-color: #ebebeb; font-size: 12px;">@list.Count</span>*@
+                                </a>
+                                }
+                            }
+                            @*@ObjectInfo.Print(Session["Email"]);*@
+                        </div>
+
+                        <button class="btn btn-default text-muted" id="list__addList--btn" type="button" style="box-shadow: none;">
+                            <i class="fas fa-plus me-2"></i> Add New List
+                        </button>
+
+                        <div id="list__addList" class="d-flex flex-column justify-content-between bg-white rounded" style="box-shadow: rgba(0, 0, 0, 0.08) 0px 0px 0px; border: 1px solid #ddd;">
+                            <div class="p-3 pt-1" style="box-sizing: border-box;">
+                                <form action="/List/Add" method="post">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="action" value="AddList">
+                                    <input type="hidden" id="ListColor" name="BgColor" value="#5c7cfa">
+
+                                    <div class="py-1 rounded d-flex align-items-center" style="background-color: transparent; border: 1px solid #f9f9f9; font-size: 14px;">
+                                        <div id="list__color--render" class="mx-2"></div>
+                                        <div class="">
+                                            <input type="text" class="border-0 text-muted w-100" placeholder="List Name" style="outline: none; background-color: transparent; font-size: 14px;" name="ListName" required>
+                                        </div>
+                                        <button type="submit" class="btn px-0 border-0" style=""><i class="fas fa-check"></i></button>
+                                    </div>
+
+                                    <div class="d-flex justify-content-between mt-3">
+                                        <div class="list__color--select" data-list-color="#ff6b6b" style="background-color: #ff6b6b; cursor: pointer;"></div>
+                                        <div class="list__color--select" data-list-color="#da77f2" style="background-color: #da77f2; cursor: pointer;"></div>
+                                        <div class="list__color--select" data-list-color="#9775fa" style="background-color: #9775fa; cursor: pointer;"></div>
+                                        <div class="list__color--select" data-list-color="#5c7cfa" style="background-color: #5c7cfa; cursor: pointer;"></div>
+                                        <div class="list__color--select" data-list-color="#66d9e8" style="background-color: #66d9e8; cursor: pointer;"></div>
+                                        <div class="list__color--select" data-list-color="#8ce99a" style="background-color: #8ce99a; cursor: pointer;"></div>
+                                        <div class="list__color--select" data-list-color="#ffd43d" style="background-color: #ffd43d; cursor: pointer;"></div>
+                                        <div class="list__color--select" data-list-color="#ff922b" style="background-color: #ff922b; cursor: pointer;"></div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr style="background-color: #b1b1b1;">
+
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <a onclick="return confirm('Are you sure log out this account?')" class="nav-link text-muted" href="/Account/Logout">
+                        <i class="fas fa-sign-out-alt"></i> Sign out
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div id="content" class="ms-3 d-flex flex-column" style="flex: 1; height: 100vh; overflow-y: scroll;">
+            @RenderBody()
+        </div>
+    </div>
+
+    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/bootstrap.bundle.min.js"></script>
+    <script src="~/Scripts/script.js"></script>
+    <script>
+        $(".l-navbar__item").on("click", function () {
+            $(".l-navbar__item").removeClass("active");
+            $(this).addClass("active");
+        }); 
+    </script>
+</body>
+</html>

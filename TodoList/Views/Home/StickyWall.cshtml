@@ -1,0 +1,51 @@
+﻿
+@{
+    ViewBag.Title = "StickyWall";
+    Layout = "~/Views/Shared/_LayoutPage1.cshtml";
+}
+
+<div class="row mb-3">
+    <div class="col-12 d-flex align-items-center">
+        <span class="text-dark fw-bolder" style="font-size: 36px;">Sticky Wall</span>
+    </div>
+</div>
+
+<div class="row mx-2 p-lg-4 p-sm-2 pe-lg-2 pe-sm-0" style="border: 1px solid #ebebeb;" id="sw__lists">
+    @if (Model != null)
+    {
+        foreach (var item in Model)
+        {
+            <div class="col-lg-4 col-md-6 col-12 ps-0 pe-3" style="cursor: pointer;">
+                <div class="mb-4 rounded sw__item" style="width: 100%; max-width: 320px; height: 300px; background-color: @item.BgColor;">
+                    <form method="post" action="/StickyWall/UpdateContent">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="SwID" value="@item.SwID" />
+
+                        <div class="p-3 pb-5 position-relative sw__item--content">
+                            <input name="SwTitle" type="text" class="fw-bold" style="width:98%; color: #333; font-size: 18px; border: 0; background-color: transparent;" value="@item.SwTitle" placeholder="Title" required>
+                            <textarea name="SwDescription" rows="10" class="w-100 h-100" style="color: #444; border: 0; background-color: transparent;" placeholder="Description">@item.SwDescription</textarea>
+                            <a onclick="return confirm('Are you sure delete this note?')" class="position-absolute" style="top: 0.6rem; right: 0.6rem; font-size: 24px;" href="/StickyWall/Delete?SwID=@item.SwID"><i class="fas fa-times fw-bold"></i></a>
+                            <img class="position-absolute sw__changeColor--btn" style="width: 22px; height: 22px; top: 2.6rem; right: 0.5rem;" src="~/Images/icon-change-color.jpg" alt="changeColor" />
+                            <div style="display: none;" class="sw__changeColor">
+                                <a href="/StickyWall/UpdateColor?BgColor=%23fdf2b3&SwID=@item.SwID" class="position-absolute rounded" style="top: 4.6rem; right: 0.5rem; width: 20px; height: 20px; background-color: #fdf2b3; border: 1px solid #333;"></a>
+                                <a href="/StickyWall/UpdateColor?BgColor=%23d1eaed&SwID=@item.SwID" class="position-absolute rounded" style="top: 6.6rem; right: 0.5rem; width: 20px; height: 20px; background-color: #d1eaed; border: 1px solid #333;"></a>
+                                <a href="/StickyWall/UpdateColor?BgColor=%23ffdada&SwID=@item.SwID" class="position-absolute rounded" style="top: 8.6rem; right: 0.5rem; width: 20px; height: 20px; background-color: #ffdada; border: 1px solid #333;"></a>
+                                <a href="/StickyWall/UpdateColor?BgColor=%23ffd4a9&SwID=@item.SwID" class="position-absolute rounded" style="top: 10.6rem; right: 0.5rem; width: 20px; height: 20px; background-color: #ffd4a9; border: 1px solid #333;"></a>
+                                <a href="/StickyWall/UpdateColor?BgColor=%23bcfdb3&SwID=@item.SwID" class="position-absolute rounded" style="top: 12.6rem; right: 0.5rem; width: 20px; height: 20px; background-color: #bcfdb3; border: 1px solid #333;"></a>
+                                <a href="/StickyWall/UpdateColor?BgColor=%23ffa4d8&SwID=@item.SwID" class="position-absolute rounded" style="top: 14.6rem; right: 0.5rem; width: 20px; height: 20px; background-color: #ffa4d8; border: 1px solid #333;"></a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        }
+    }
+
+    <div class="col-lg-4 col-md-6 col-12 ps-0 pe-3" style="cursor: pointer;" id="sw__add--btn">
+        <div class="mb-4 rounded d-flex justify-content-center align-items-center" style="width: 100%; max-width: 320px; height: 300px; background-color: #ddd;">
+            <div class="p-3 pb-5 text-dark rounded">
+                <i class="fas fa-plus text-dark" style="font-size: 60px;"></i>
+            </div>
+        </div>
+    </div>
+</div>
